@@ -1,5 +1,4 @@
 ---
-
 - name: nvidia-docker (v2) release key is registered
   apt_key:
     url: https://nvidia.github.io/nvidia-docker/gpgkey
@@ -39,7 +38,6 @@
     state: present
   notify: restart docker service
 
-
 - name: nvidia-docker (v2) is installed
   apt:
     name: "nvidia-docker2={{ nvidia_docker_version }}+docker{{ nvidia_docker_docker_version }}-1"
@@ -53,7 +51,8 @@
 
 - name: content of /etc/docker/daemon.json is merged
   copy:
-    content: "{{ nvidia_docker_daemon_json_backup.stdout | from_json | combine(nvidia_docker_daemon_json_v2.stdout | from_json) }}"
+    content: "{{ nvidia_docker_daemon_json_backup.stdout | from_json | combine(nvidia_docker_daemon_json_v2.stdout | from_json) | combine( (nvidia_default | from_json) if nvidia_default_runtime == true else '{}' | from_json) }}"
     dest: /etc/docker/daemon.json
     validate: python -m json.tool %s
   when: nvidia_docker_daemon_json_backup.stdout != ""
+  notify: restart docker service

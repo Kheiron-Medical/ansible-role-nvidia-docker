@@ -12,12 +12,14 @@ Role Variables
 --------------
 
 ```
-nvidia_docker_version: 1.0.1
+nvidia_docker_version: 2.0.3
 nvidia_docker_docker_version: '*'
+nvidia_default_runtime: true
 ```
 
-- `nvidia_docker_version` is a variable to specify which version of nvidia-docker, current default value is `1.0.1`
+- `nvidia_docker_version` is a variable to specify which version of nvidia-docker, current default value is `2.0.3`
 - `nvidia_docker_docker_version` is a variable to specify which version of docker, current default value is `'*'`, used only if nvidia_docker_version.startswith('2').
+- `nvidia_default_runtime` allows you to set the nvidia runtime to be the docker default (adds to /etc/docker/daemon.json). Default is true
 
 Dependencies
 ------------
