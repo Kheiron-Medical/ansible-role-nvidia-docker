@@ -42,7 +42,9 @@
   apt:
     name: "nvidia-docker2={{ nvidia_docker_version }}+docker{{ nvidia_docker_docker_version }}-1"
     state: present
-  notify: restart docker service
+  notify: 
+    - restart docker service
+    - restart kubelet service
 
 - name: confirm content of /etc/docker/daemon.json after installation of nvidia-docker2
   command: cat /etc/docker/daemon.json
@@ -54,4 +56,6 @@
     content: "{{ (nvidia_docker_daemon_json_backup.stdout if nvidia_docker_daemon_json_backup.stdout != '' else '{}') | from_json | combine(nvidia_docker_daemon_json_v2.stdout | from_json) | combine( (nvidia_default | from_json) if nvidia_default_runtime == true else '{}' | from_json) }}"
     dest: /etc/docker/daemon.json
     validate: python -m json.tool %s
-  notify: restart docker service
+  notify: 
+    - restart docker service
+    - restart kubelet service

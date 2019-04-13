@@ -2,3 +2,11 @@
   service:
     name: docker
     state: restarted
+
+- name: restart kubelet service
+  service:
+    name: kubelet
+    state: restarted
+  register: kubelet_svc
+  failed_when: kubelet_svc is failed and not 'Could not find the requested service' in kubelet_svc.msg
+  when: service 
